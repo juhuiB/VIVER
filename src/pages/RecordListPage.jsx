@@ -135,14 +135,17 @@ export default function RecordListPage() {
       </div>
 
       {/* 전체 선택 체크박스 */}
-      <div className="flex items-center mb-2">
+      <div className="relative flex items-center mb-2">
         <input
           type="checkbox"
           checked={allChecked}
           onChange={handleAll}
-          className="mr-2"
+          className="w-5 h-5 mr-2"
+          id="checkAll"
         />
-        <span className="text-sm">전체 선택</span>
+        <label htmlFor="checkAll" className="text-sm">
+          전체 선택
+        </label>
       </div>
 
       {/* 기록 리스트 */}
