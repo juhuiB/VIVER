@@ -55,8 +55,8 @@ export default function SearchModal({ onClose, onSelect }) {
 
   return (
     <FocusLock returnFocus> 
-    <div className="fixed inset-0 bg-black/60 flex justify-center items-start pt-20 z-50">
-      <div className="bg-white w-full max-w-xl h-[85vh] p-6 rounded-md relative shadow-lg flex flex-col">
+    <div className="fixed inset-0 flex justify-center items-start z-50">
+      <div className="bg-white w-full h-full p-6 relative flex flex-col">
         {/* 팝업 헤더 */}
         <div className="h-12">
           <button

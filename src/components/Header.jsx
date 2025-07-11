@@ -4,7 +4,7 @@ import { FiSearch } from "react-icons/fi";
 
 export default function Header({ onSearchClick = () => {} }) {
   return (
-    <header className="h-12 flex sm:flex-row items-center justify-between gap-2 sm:gap-0">
+    <header className="fixed top-0 left-0 right-0 h-12 px-4 bg-white flex sm:flex-row items-center justify-between gap-2 sm:gap-0 z-50">
       <Link to="/">
         <img
           src={logoImage}

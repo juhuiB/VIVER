@@ -32,14 +32,14 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="px-4 pb-20 max-w-7xl mx-auto">
+    <div className="mx-auto">
       {/* 필터 */}
       {renderFilterButtons()}
 
       {/* 섹션 */}
       {sections.map(({ key, title }) => (
-        <div className="mb-8" key={key}>
-          <h2 className="text-lg font-semibold mb-2">{title}</h2>
+        <div className="mb-4" key={key}>
+          <h2 className="text-2xl font-semibold mb-2">{title}</h2>
           <SectionSwiper
             section={key}
             filter={filter}

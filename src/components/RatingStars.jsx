@@ -6,7 +6,7 @@ export default function RatingStars({ value = 0, onChange }) {
   const [hovered, setHovered] = useState(null);
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-6 justify-center">
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
@@ -14,15 +14,14 @@ export default function RatingStars({ value = 0, onChange }) {
           onClick={() => onChange(star)}
           onMouseEnter={() => setHovered(star)}
           onMouseLeave={() => setHovered(null)}
-          className="text-xl"
+          className="w-8 h-8"
           aria-label={`${star}점`}
         >
           <FaStar
-            className={
-              star <= (hovered || value)
-                ? "text-[#e50101]"
-                : "text-gray-300"
-            }
+            className={ `w-full h-full ${
+                star <= (hovered || value) ? "text-[#e50101]" : "text-gray-300"
+            }`}
+            
           />
         </button>
       ))}

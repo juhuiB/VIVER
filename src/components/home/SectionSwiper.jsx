@@ -1,5 +1,4 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
 import "swiper/css";
 
 import useMovieData from "../../hooks/useMovieData";
@@ -25,19 +24,19 @@ export default function SectionSwiper({ section, filter, onSelectItem }) {
     <section className="">
       <Swiper
         spaceBetween={10}
-        slidesPerView={3}
+        slidesPerView={3.5}
         breakpoints={{
-          640: { slidesPerView: 3 },
-          768: { slidesPerView: 4 },
-          1024: { slidesPerView: 5 },
+          360: { slidesPerView: 2.5 },
+          640: { slidesPerView: 3.5 },
+          768: { slidesPerView: 4.5 },
+          1024: { slidesPerView: 5.5 },
         }}
-        className="mb-8"
       >
         {items.map((item) => (
           <SwiperSlide key={item.id}>
             <div
-              className="cursor-pointer rounded border hover:shadow transition p-2"
-              onClick={() => onSelectItem && onSelectItem(item)} // 여기 추가
+              className="cursor-pointer"
+              onClick={() => onSelectItem && onSelectItem(item)}
             >
               <img
                 src={
@@ -46,11 +45,9 @@ export default function SectionSwiper({ section, filter, onSelectItem }) {
                     : "https://via.placeholder.com/300x450?text=No+Image"
                 }
                 alt={item.title || item.name}
-                className="w-full h-44 object-cover rounded mb-2"
+                className="w-full h-[250px] rounded mb-2"
               />
-              <p className="text-sm text-center font-medium">
-                {item.title || item.name}
-              </p>
+              <p className="text-xs font-medium">{item.title || item.name}</p>
             </div>
           </SwiperSlide>
         ))}
