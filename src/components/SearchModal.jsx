@@ -15,7 +15,7 @@ export default function SearchModal({ onClose, onSelect }) {
   const filteredResults = results.filter((item) => {
     if (filter === "movie") return item.media_type === "movie";
     if (filter === "tv") return item.media_type === "tv";
-    return item.media_type === "movie" || item.media_type === "tv"; // 'all'은 영화+드라마만
+    return item.media_type === "movie" || item.media_type === "tv"; // 'all'은 영화+시리즈
   });
 
   const inputRef = useRef(null);
@@ -101,7 +101,7 @@ export default function SearchModal({ onClose, onSelect }) {
                     : "bg-white"
                 }`}
               >
-                {type === "all" ? "전체" : type === "movie" ? "영화" : "드라마"}
+                {type === "all" ? "전체" : type === "movie" ? "영화" : "시리즈"}
               </button>
             ))}
           </div>

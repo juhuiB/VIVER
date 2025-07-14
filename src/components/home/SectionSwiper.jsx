@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-
+import noPoster from "../../assets/img_noposter.png";
 import useMovieData from "../../hooks/useMovieData";
 import useTVData from "../../hooks/useTvData";
 
@@ -42,7 +42,7 @@ export default function SectionSwiper({ section, filter, onSelectItem }) {
                 src={
                   item.poster_path
                     ? `${imageBase}${item.poster_path}`
-                    : "https://via.placeholder.com/300x450?text=No+Image"
+                    : noPoster
                 }
                 alt={item.title || item.name}
                 className="w-full h-[250px] rounded mb-2"

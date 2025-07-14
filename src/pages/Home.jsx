@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SectionSwiper from "../components/home/SectionSwiper";
-import DetailModal from "../components/DetailModal"; // 작품 상세 모달 컴포넌트
+import DetailModal from "../components/DetailModal";
 
 export default function HomePage() {
   const [filter, setFilter] = useState("all");
@@ -18,7 +18,7 @@ export default function HomePage() {
             filter === type ? "bg-[#ff6b6b] text-white border-0" : "bg-white text-black"
           }`}
         >
-          {type === "all" ? "전체" : type === "movie" ? "영화" : "드라마"}
+          {type === "all" ? "전체" : type === "movie" ? "영화" : "시리즈"}
         </button>
       ))}
     </div>
