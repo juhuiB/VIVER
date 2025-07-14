@@ -89,7 +89,7 @@ export default function RecordListPage() {
         className="flex justify-between items-center mb-4 relative"
         ref={sortBoxRef}
       >
-        {/* ▼ 필터 아이콘 */}
+        {/* 필터*/}
         <button
           type="button"
           onClick={() => setOpenSort(!openSort)}
@@ -101,7 +101,7 @@ export default function RecordListPage() {
           </span>
         </button>
 
-        {/* ▼ 드롭다운 메뉴 */}
+        {/* 드롭다운 메뉴 */}
         {openSort && (
           <ul className="absolute left-0 top-9 w-40 bg-white border rounded shadow text-sm z-10">
             <li>
@@ -171,8 +171,9 @@ export default function RecordListPage() {
             <input
               type="checkbox"
               checked={checkedIds.has(record.id)}
+              onClick={(e) => e.stopPropagation()}
               onChange={() => toggleCheck(record.id)}
-              className="mr-2 shrink-0"
+              className="mr-2 shrink- cursor-pointer"
             />
 
             <img
