@@ -79,7 +79,7 @@ export default function RecordListPage() {
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
+    <div className="mx-auto">
       {/* 정렬 & 선택삭제 툴바 */}
       <div
         className="flex justify-between items-center mb-4 relative"

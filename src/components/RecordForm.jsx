@@ -24,15 +24,6 @@ export default function RecordForm({
   const [posterPath, setPosterPath] = useState(null);
   const isValid = title.trim() !== "" && releaseDate !== "";
 
-  //   useEffect(() => {
-  //     const data = selected || initialData;
-  //     if (data) {
-  //       setTitle(data.title || data.name);
-  //       setReleaseDate(data.release_date || data.first_air_date);
-  //       setMediaType(data.media_type || (data.title ? "movie" : "tv"));
-  //       setPosterPath(data.poster_path || null);
-  //     }
-  //   }, [initialData, selected]);
   const isChanged = () => {
     if (!initialData && !selected) return false; // 새로 추가하는 경우엔 항상 활성화
 

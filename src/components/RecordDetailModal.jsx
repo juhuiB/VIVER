@@ -69,9 +69,7 @@ export default function RecordDetailModal({ record, onClose }) {
           <div className="mb-4 pb-4">
             <h4 className="mb-2 text-sm font-semibold text-gray-500">한줄평</h4>
             <p
-              className={`text-sm ${
-                record.comment ? "whitespace-pre-wrap break-words" : ""
-              } line-clamp-3`}
+              className="text-sm whitespace-pre-wrap break-words"
             >
               {record.comment ? record.comment : "-"}
             </p>
