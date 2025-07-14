@@ -5,6 +5,7 @@ import noPoster from "../assets/img_noposter.png";
 import FocusLock from "react-focus-lock"; 
 
 export default function SearchModal({ onClose, onSelect }) {
+    
   const [query, setQuery] = useState("");
   // 1. 원본 전체 결과
   const [results, setResults] = useState([]);
@@ -26,9 +27,7 @@ export default function SearchModal({ onClose, onSelect }) {
   const [hasSearched, setHasSearched] = useState(false);
   
 
-  {
-    /* 검색 API 호출 */
-  }
+  {/* 검색 API 호출 */}
   const search = async () => {
     if (!query) return;
 
@@ -39,7 +38,7 @@ export default function SearchModal({ onClose, onSelect }) {
     try {
       const res = await axios.get(url);
       let data = res.data.results || [];
-      console.log("📦 TMDB 응답 데이터:", res.data);
+      console.log("TMDB 응답 데이터:", res.data);
       if (filter === "movie")
         data = data.filter((i) => i.media_type === "movie");
       if (filter === "tv") data = data.filter((i) => i.media_type === "tv");

@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 export default function RecordDetailModal({ record, onClose }) {
   if (!record) return null;
 
-  /* ⭐ 별 아이콘 배열 생성 */
+  /* 별 아이콘 배열 생성 */
   const renderStars = (value) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function RecordCardMenu({ onEdit, onDelete }) {
+export default function RecordCardMenu({ onEdit = () => {}, onDelete = () => {} }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 

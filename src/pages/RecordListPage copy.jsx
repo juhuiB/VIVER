@@ -1,30 +1,19 @@
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
-import RecordDetailModal from "../components/RecordDetailModal";
-import EditRecordModal from "../components/EditRecordModal";
-import RecordCardMenu from "../components/RecordCardMenu";
-import noPoster from "../assets/img_noposter.png";
+import "react-toastify/dist/ReactToastify.css";
 import { FiSliders } from "react-icons/fi";
 
 export default function RecordListPage() {
+  /* -------------------------------- state -------------------------------- */
   const [records, setRecords] = useState([]);
-  const [sortBy, setSortBy] = useState("latest");
-  const [selected, setSelected] = useState(null); // 상세 보기
-  const [editing, setEditing] = useState(null); // 수정 모달
+  const [sortBy, setSortBy] = useState("latest"); // latest | rating
   const [checkedIds, setCheckedIds] = useState(new Set());
-  /* --- 기록 불러오기 함수 --------------------------------------- */
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("viver-records") || "[]");
-    setRecords(saved);
-  }, []);
 
-  /* --- 기록 업데이트 함수 --------------------------------------- */
-  const handleUpdate = (updated) => {
-    const newList = records.map((r) => (r.id === updated.id ? updated : r));
-    setRecords(newList);
-    localStorage.setItem("viver-records", JSON.stringify(newList));
-    toast.success("기록이 수정되었습니다!");
-  };
+  /* --------------------------- read from storage -------------------------- */
+  useEffect(() => {
+    const saved = localStorage.getItem("viver-records");
+    if (saved) setRecords(JSON.parse(saved));
+  }, []);
 
   /* ----------------------------- sort ----------------------------- */
   const [openSort, setOpenSort] = useState(false);
@@ -48,17 +37,15 @@ export default function RecordListPage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* --- 기록 삭제 함수 --------------------------------------- */
+  /* ------------------------------ delete one ----------------------------- */
   const handleDelete = (id) => {
     if (!window.confirm("정말 삭제하시겠어요?")) return;
+
     const updated = records.filter((r) => r.id !== id);
     setRecords(updated);
     localStorage.setItem("viver-records", JSON.stringify(updated));
-    toast.success("기록이 삭제되었습니다");
+    toast.success("기록이 삭제되었습니다.");
   };
-
-  if (records.length === 0)
-    return <p className="text-center text-gray-500 mt-10">기록이 없습니다.</p>;
 
   /* --------------------------- multi‑select logic ------------------------- */
   const toggleCheck = (id) => {
@@ -82,8 +69,12 @@ export default function RecordListPage() {
     toast.success("선택한 기록이 삭제되었습니다.");
   };
 
+  /* ------------------------------- render -------------------------------- */
+  if (records.length === 0)
+    return <p className="text-center text-gray-500 mt-10">기록이 없습니다.</p>;
+
   return (
-    <div className="p-4 max-w-5xl mx-auto">
+    <div className="p-4 max-w-3xl mx-auto">
       {/* 정렬 & 선택삭제 툴바 */}
       <div
         className="flex justify-between items-center mb-4 relative"
@@ -99,6 +90,15 @@ export default function RecordListPage() {
           <span className="text-sm text-[#ff6b6b] font-semibold">
             {sortBy === "latest" ? "최근 관람일순" : "별점 높은순"}
           </span>
+        </button>
+
+        {/* ▼ 선택삭제 버튼(그대로 유지) */}
+        <button
+          onClick={handleBulkDelete}
+          className="text-sm text-red-600 border border-red-500 px-3 py-1 rounded disabled:opacity-40"
+          disabled={checkedIds.size === 0}
+        >
+          선택 삭제
         </button>
 
         {/* ▼ 드롭다운 메뉴 */}
@@ -134,38 +134,26 @@ export default function RecordListPage() {
         )}
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        {/* 전체 선택 체크박스 */}
-        <div className="relative flex items-center">
-          <input
-            type="checkbox"
-            checked={allChecked}
-            onChange={handleAll}
-            className="w-5 h-5 mr-2"
-            id="checkAll"
-          />
-          <label htmlFor="checkAll" className="text-sm">
-            전체 선택
-          </label>
-        </div>
-
-        {/* 선택삭제 버튼*/}
-        <button
-          onClick={handleBulkDelete}
-          className="text-sm text-red-600 border border-red-500 px-3 py-1 rounded disabled:opacity-40"
-          disabled={checkedIds.size === 0}
-        >
-          선택 삭제
-        </button>
+      {/* 전체 선택 체크박스 */}
+      <div className="relative flex items-center mb-2">
+        <input
+          type="checkbox"
+          checked={allChecked}
+          onChange={handleAll}
+          className="w-5 h-5 mr-2"
+          id="checkAll"
+        />
+        <label htmlFor="checkAll" className="text-sm">
+          전체 선택
+        </label>
       </div>
 
-      {/* 그리드: 포스터 + 제목만 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+      {/* 기록 리스트 */}
+      <ul className="space-y-4">
         {sortedRecords.map((record) => (
-          <div
+          <li
             key={record.id}
-            className="cursor-pointer group "
-            onClick={() => setSelected(record)}
+            className="flex items-center gap-4 p-4 bg-white rounded shadow"
           >
             {/* 체크박스 */}
             <input
@@ -175,47 +163,38 @@ export default function RecordListPage() {
               className="mr-2 shrink-0"
             />
 
+            {/* 포스터 */}
             <img
               src={
                 record.poster_path
-                  ? `https://image.tmdb.org/t/p/w300${record.poster_path}`
-                  : noPoster
+                  ? `https://image.tmdb.org/t/p/w200${record.poster_path}`
+                  : "https://via.placeholder.com/100x150?text=No+Image"
               }
               alt={record.title}
-              className="w-full h-[250px] rounded mb-2"
+              className="w-[80px] h-[120px] object-cover rounded shrink-0"
             />
 
-            <div className="flex items-center justify-between">
-              <p className="mt-2 text-sm font-medium truncate">
-                {record.title}
+            {/* 정보 */}
+            <div className="flex-1">
+              <h2 className="font-semibold">{record.title}</h2>
+              <p className="text-sm text-gray-600">{record.releaseDate}</p>
+              <p className="text-sm text-gray-600">⭐ {record.rating}점</p>
+              <p className="text-sm text-gray-600">{record.comment}</p>
+              <p className="text-xs text-gray-400 mt-1">
+                관람일: {record.watchDate}
               </p>
-
-              <div className="mt-1 ml-auto text-right">
-                <RecordCardMenu
-                  onEdit={() => setEditing(record)}
-                  onDelete={() => handleDelete(record.id)}
-                />
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
 
-      {/* 상세 팝업 */}
-      {selected && (
-        <RecordDetailModal
-          record={selected}
-          onClose={() => setSelected(null)}
-        />
-      )}
-      {/* 수정 팝업 */}
-      {editing && (
-        <EditRecordModal
-          record={editing}
-          onSave={handleUpdate}
-          onClose={() => setEditing(null)}
-        />
-      )}
+            {/* 개별 삭제 */}
+            <button
+              onClick={() => handleDelete(record.id)}
+              className="text-sm text-red-500 border border-red-500 px-3 py-1 rounded hover:bg-red-50"
+            >
+              삭제
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

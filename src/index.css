@@ -114,6 +114,11 @@ input[type="checkbox"]:checked:before {
   color: white !important;
 }
 
+/* iOS 터치 하이라이트 제거 */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
 
 @media (prefers-color-scheme: light) {
   :root {

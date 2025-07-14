@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import RatingStars from "./RatingStars";
 import { FiSearch } from "react-icons/fi";
 
@@ -11,8 +12,9 @@ export default function RecordForm({
   selected = null,
   onOpenSearch,
   isEdit = false,
-  onAdd,
+  onAdd = () => {},
 }) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [watchDate, setWatchDate] = useState(null); // 변경: 문자열 → Date 객체
@@ -67,16 +69,6 @@ export default function RecordForm({
       return;
     }
 
-    // //  중복 확인 (title과 releaseDate가 같은 경우)
-    // const isDuplicate = existingRecords.some(
-    //   (r) => r.title === title && r.releaseDate === newRecord.releaseDate
-    // );
-
-    // if (isDuplicate) {
-    //   alert("이미 등록된 작품입니다.");
-    //   return;
-    // }
-
     //  중복이 아니면 기록 저장
     const updated = isEdit
       ? existingRecords.map((r) => (r.id === newRecord.id ? newRecord : r))
@@ -85,25 +77,16 @@ export default function RecordForm({
     localStorage.setItem("viver-records", JSON.stringify(updated));
     onAdd(newRecord);
     alert(isEdit ? "기록이 수정되었습니다!" : "기록되었습니다!");
-    // const updatedRecords = [...existingRecords, newRecord];
-    // localStorage.setItem("viver-records", JSON.stringify(updatedRecords));
-
-    // const updated = isEdit
-    //   ? existingRecords.map((r) => (r.id === newRecord.id ? newRecord : r))
-    //   : [...existingRecords, newRecord];
-
-    // localStorage.setItem("viver-records", JSON.stringify(updated));
-    // onAdd(newRecord);
-    // alert(isEdit ? "기록이 수정되었습니다!" : "기록되었습니다!");
-
+    // ③ “등록하기”일 때만 /list 로 이동
+    if (!isEdit) navigate("/list");
     // //  입력 초기화
-    // setTitle("");
-    // setReleaseDate("");
-    // setRating(0);
-    // setWatchDate(null);
-    // setComment("");
-    // setMediaType("movie");
-    // setPosterPath(null);
+    setTitle("");
+    setReleaseDate("");
+    setRating(0);
+    setWatchDate(null);
+    setComment("");
+    setMediaType("movie");
+    setPosterPath(null);
   };
 
   return (
