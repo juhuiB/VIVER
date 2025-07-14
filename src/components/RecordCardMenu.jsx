@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 export default function RecordCardMenu({ onEdit = () => {}, onDelete = () => {} }) {
   const [open, setOpen] = useState(false);
+  const [openDirection, setOpenDirection] = useState("down");
   const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
-  // 메뉴 바깥 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -15,24 +16,38 @@ export default function RecordCardMenu({ onEdit = () => {}, onDelete = () => {} 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    if (!open) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      const menuHeight = 100; // 메뉴 예상 높이
+
+      if (spaceBelow < menuHeight) setOpenDirection("up");
+      else setOpenDirection("down");
+    }
+    setOpen((prev) => !prev);
+  };
+
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
-      {/* 케밥 버튼 */}
       <button
+        ref={buttonRef}
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(!open);
-        }}
+        onClick={toggleMenu}
         className="text-xl px-2 py-1 hover:bg-gray-100 rounded"
         aria-label="메뉴"
       >
         ⋮
       </button>
 
-      {/* 드롭다운 메뉴 */}
       {open && (
-        <div className="absolute right-0 z-10 mt-1 w-24 rounded-md shadow bg-white border text-sm">
+        <div
+          className={`absolute right-0 z-10 w-24 rounded-md shadow bg-white border text-sm z-50
+          ${openDirection === "down" ? "top-full mt-1" : "bottom-full mb-1"}`}
+          ref={menuRef}
+        >
           <button
             onClick={(e) => {
               e.stopPropagation();

@@ -126,6 +126,15 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+input, textarea, button {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
