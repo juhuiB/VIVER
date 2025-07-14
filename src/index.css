@@ -88,7 +88,6 @@ input[type="checkbox"] {
   height: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  position: relative;
 }
 input[type="checkbox"]:checked {
   background-color: #ff6b6b;
@@ -105,6 +104,13 @@ input[type="checkbox"]:checked:before {
   border-bottom: 2px solid white;
     transform: rotate(-45deg);
   border-radius: 2px;
+}
+
+.check-card {
+    width:28px;
+    height:28px;
+    border:2px solid #fff;
+    cursor:pointer;
 }
 
 /* 선택된 날짜 스타일 변경 */

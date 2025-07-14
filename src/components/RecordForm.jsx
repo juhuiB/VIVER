@@ -22,14 +22,56 @@ export default function RecordForm({
   const [comment, setComment] = useState("");
   const [mediaType, setMediaType] = useState("movie");
   const [posterPath, setPosterPath] = useState(null);
+  const isValid = title.trim() !== "" && releaseDate !== "";
+
+  //   useEffect(() => {
+  //     const data = selected || initialData;
+  //     if (data) {
+  //       setTitle(data.title || data.name);
+  //       setReleaseDate(data.release_date || data.first_air_date);
+  //       setMediaType(data.media_type || (data.title ? "movie" : "tv"));
+  //       setPosterPath(data.poster_path || null);
+  //     }
+  //   }, [initialData, selected]);
+  const isChanged = () => {
+    if (!initialData && !selected) return false; // 새로 추가하는 경우엔 항상 활성화
+
+    const data = selected || initialData;
+
+    return (
+      title !== (data.title || data.name || "") ||
+      releaseDate !== (data.release_date || data.first_air_date || "") ||
+      comment !== (data.comment || data.review || "") ||
+      rating !== (data.rating || 0) ||
+      (watchDate ? format(watchDate, "yyyy.MM.dd") : "") !==
+        (data.watchDate || "") ||
+      mediaType !== (data.media_type || (data.title ? "movie" : "tv")) ||
+      posterPath !== (data.poster_path || null)
+    );
+  };
 
   useEffect(() => {
     const data = selected || initialData;
     if (data) {
-      setTitle(data.title || data.name);
-      setReleaseDate(data.release_date || data.first_air_date);
+      setTitle(data.title || data.name || "");
+      setReleaseDate(data.release_date || data.first_air_date || "");
       setMediaType(data.media_type || (data.title ? "movie" : "tv"));
       setPosterPath(data.poster_path || null);
+      setComment(data.comment || data.review || "");
+      setRating(data.rating || 0);
+      // watchDate는 Date 타입이라 format 필요, 데이터가 string이라면 parse 필요
+      if (data.watchDate) {
+        // 'yyyy.MM.dd' → Date 변환
+        const parts = data.watchDate.split(".");
+        if (parts.length === 3) {
+          const [y, m, d] = parts;
+          setWatchDate(new Date(+y, +m - 1, +d));
+        } else {
+          setWatchDate(null);
+        }
+      } else {
+        setWatchDate(null);
+      }
     }
   }, [initialData, selected]);
 
@@ -95,7 +137,7 @@ export default function RecordForm({
         <label className="block font-semibold mb-1 text-xs">제목</label>
         <input
           type="text"
-          value={title || ""}
+          value={title}
           readOnly
           onChange={(e) => setTitle(e.target.value)}
           className="w-full h-12 pl-4 pr-10 py-2 border rounded-lg bg-[#f9f9f9] cursor-default"
@@ -117,7 +159,7 @@ export default function RecordForm({
         <label className="block font-semibold mb-1 text-xs">개봉일</label>
         <input
           type="text"
-          value={releaseDate || ""}
+          value={releaseDate}
           readOnly
           placeholder="YYYY.MM.DD"
           onChange={(e) => setReleaseDate(e.target.value)}
@@ -145,6 +187,7 @@ export default function RecordForm({
           className="w-full h-12 pl-4 pr-10 py-2 border rounded-lg bg-white text-center"
           showPopperArrow={false}
           autoComplete="off"
+          onKeyDown={(e) => e.preventDefault()}
         />
       </div>
 
@@ -152,15 +195,30 @@ export default function RecordForm({
         <label className="block font-semibold mb-1 text-xs">한줄평</label>
         <textarea
           value={comment || ""}
-          onChange={(e) => setComment(e.target.value)}
+          onChange={(e) => {
+            // 150자 초과 입력을 방지
+            const { value } = e.target;
+            if (value.length <= 150) setComment(value);
+            // value.slice(0, 150) 으로 잘라 넣어도 OK
+          }}
           rows="2"
-          className="w-full h-12 pl-4 pr-10 py-2 border rounded-lg bg-white resize-none"
+          maxLength={150}
+          className="w-full h-auto pl-4 pr-10 py-2 border rounded-lg bg-white resize-none"
         />
+        <p className="text-right text-[11px] text-gray-500 mt-1">
+          {comment.length} / 150
+        </p>
       </div>
 
       <button
         type="submit"
-        className="bg-[#ff6b6b] w-full h-12 text-white rounded-md"
+        disabled={!isValid || !isChanged()}
+        className={`w-full h-12 py-2 rounded-lg text-white
+    ${
+      isValid && isChanged()
+        ? "bg-[#ff6b6b] hover:bg-[#ff5252]"
+        : "bg-gray-300 cursor-not-allowed"
+    }`}
       >
         {isEdit ? "수정하기" : "등록하기"}
       </button>

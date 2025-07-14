@@ -2,6 +2,8 @@ import RecordForm from "./RecordForm";
 import { FiX } from "react-icons/fi";
 
 export default function EditRecordModal({ record, onSave, onClose }) {
+    
+    
   if (!record) return null;
 
   return (

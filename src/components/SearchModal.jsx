@@ -33,7 +33,7 @@ export default function SearchModal({ onClose, onSelect }) {
 
     const baseUrl = "https://api.themoviedb.org/3/search/multi";
     const key = import.meta.env.VITE_TMDB_API_KEY;
-    const url = `${baseUrl}?api_key=${key}&query=${query}&language=ko-KR&include_adult=true`;
+    const url = `${baseUrl}?api_key=${key}&query=${query}&language=ko-KR`;
 
     try {
       const res = await axios.get(url);

@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { toast } from "react-toastify";
 import RecordDetailModal from "../components/RecordDetailModal";
 import EditRecordModal from "../components/EditRecordModal";
 import RecordCardMenu from "../components/RecordCardMenu";
@@ -23,7 +22,6 @@ export default function RecordListPage() {
     const newList = records.map((r) => (r.id === updated.id ? updated : r));
     setRecords(newList);
     localStorage.setItem("viver-records", JSON.stringify(newList));
-    toast.success("기록이 수정되었습니다!");
   };
 
   /* ----------------------------- sort ----------------------------- */
@@ -54,7 +52,6 @@ export default function RecordListPage() {
     const updated = records.filter((r) => r.id !== id);
     setRecords(updated);
     localStorage.setItem("viver-records", JSON.stringify(updated));
-    toast.success("기록이 삭제되었습니다");
   };
 
   if (records.length === 0)
@@ -79,7 +76,6 @@ export default function RecordListPage() {
     setRecords(updated);
     localStorage.setItem("viver-records", JSON.stringify(updated));
     setCheckedIds(new Set());
-    toast.success("선택한 기록이 삭제되었습니다.");
   };
 
   return (
@@ -160,11 +156,11 @@ export default function RecordListPage() {
       </div>
 
       {/* 그리드: 포스터 + 제목만 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+      <div className= " grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
         {sortedRecords.map((record) => (
           <div
             key={record.id}
-            className="cursor-pointer group "
+            className="cursor-pointer group relative"
             onClick={() => setSelected(record)}
           >
             {/* 체크박스 */}
@@ -173,7 +169,7 @@ export default function RecordListPage() {
               checked={checkedIds.has(record.id)}
               onClick={(e) => e.stopPropagation()}
               onChange={() => toggleCheck(record.id)}
-              className="mr-2 shrink- cursor-pointer"
+              className="check-card shrink-0 absolute top-2 right-2"
             />
 
             <img

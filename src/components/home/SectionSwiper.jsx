@@ -47,7 +47,7 @@ export default function SectionSwiper({ section, filter, onSelectItem }) {
                 alt={item.title || item.name}
                 className="w-full h-[250px] rounded mb-2"
               />
-              <p className="text-xs font-medium">{item.title || item.name}</p>
+              <p className="text-sm font-medium">{item.title || item.name}</p>
             </div>
           </SwiperSlide>
         ))}
