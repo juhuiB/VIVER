@@ -10,6 +10,8 @@ export default function RecordForm({
   initialData = null,
   selected = null,
   onOpenSearch,
+  isEdit = false,
+  onAdd,
 }) {
   const [title, setTitle] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
@@ -29,51 +31,80 @@ export default function RecordForm({
     }
   }, [initialData, selected]);
 
+  // Record ID는 수정 시 기존 ID를 사용하고, 새로 추가할 때는 현재 시간으로 설정
+  const recordId = isEdit && initialData ? initialData.id : Date.now();
+
   const handleSubmit = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const newRecord = {
-    id: Date.now(),
-    title,
-    releaseDate,
-    rating,
-    watchDate: watchDate ? format(watchDate, "yyyy.MM.dd") : "",
-    comment,
-    media_type: mediaType,
-    poster_path: posterPath,
+    const newRecord = {
+      ...initialData, // 기존 값 복사(옵션)
+      //   id: Date.now(),
+      id: recordId,
+      title,
+      releaseDate,
+      rating,
+      watchDate: watchDate ? format(watchDate, "yyyy.MM.dd") : "",
+      comment,
+      media_type: mediaType,
+      poster_path: posterPath,
+    };
+
+    //  기존 기록 불러오기
+    const existingRecords =
+      JSON.parse(localStorage.getItem("viver-records")) || [];
+
+    const isDuplicate = existingRecords.some(
+      (r) =>
+        r.title === newRecord.title &&
+        r.releaseDate === newRecord.releaseDate &&
+        r.id !== newRecord.id // ← **자기 자신은 제외**
+    );
+
+    // 4️⃣ 중복이면 차단
+    if (isDuplicate) {
+      alert("이미 등록된 작품입니다.");
+      return;
+    }
+
+    // //  중복 확인 (title과 releaseDate가 같은 경우)
+    // const isDuplicate = existingRecords.some(
+    //   (r) => r.title === title && r.releaseDate === newRecord.releaseDate
+    // );
+
+    // if (isDuplicate) {
+    //   alert("이미 등록된 작품입니다.");
+    //   return;
+    // }
+
+    //  중복이 아니면 기록 저장
+    const updated = isEdit
+      ? existingRecords.map((r) => (r.id === newRecord.id ? newRecord : r))
+      : [...existingRecords, newRecord];
+
+    localStorage.setItem("viver-records", JSON.stringify(updated));
+    onAdd(newRecord);
+    alert(isEdit ? "기록이 수정되었습니다!" : "기록되었습니다!");
+    // const updatedRecords = [...existingRecords, newRecord];
+    // localStorage.setItem("viver-records", JSON.stringify(updatedRecords));
+
+    // const updated = isEdit
+    //   ? existingRecords.map((r) => (r.id === newRecord.id ? newRecord : r))
+    //   : [...existingRecords, newRecord];
+
+    // localStorage.setItem("viver-records", JSON.stringify(updated));
+    // onAdd(newRecord);
+    // alert(isEdit ? "기록이 수정되었습니다!" : "기록되었습니다!");
+
+    // //  입력 초기화
+    // setTitle("");
+    // setReleaseDate("");
+    // setRating(0);
+    // setWatchDate(null);
+    // setComment("");
+    // setMediaType("movie");
+    // setPosterPath(null);
   };
-
-  //  기존 기록 불러오기
-  const existingRecords =
-    JSON.parse(localStorage.getItem("viver-records")) || [];
-
-  //  중복 확인 (title과 releaseDate가 같은 경우)
-  const isDuplicate = existingRecords.some(
-    (r) => r.title === newRecord.title && r.releaseDate === newRecord.releaseDate
-  );
-
-  if (isDuplicate) {
-    alert("이미 등록된 작품입니다.");
-    return;
-  }
-
-  //  중복이 아니면 기록 저장
-  const updatedRecords = [...existingRecords, newRecord];
-  localStorage.setItem("viver-records", JSON.stringify(updatedRecords));
-
-  //  알림
-  alert("기록되었습니다!");
-
-  //  입력 초기화
-  setTitle("");
-  setReleaseDate("");
-  setRating(0);
-  setWatchDate(null);
-  setComment("");
-  setMediaType("movie");
-  setPosterPath(null);
-};
-
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,7 +112,7 @@ export default function RecordForm({
         <label className="block font-semibold mb-1 text-xs">제목</label>
         <input
           type="text"
-          value={title}
+          value={title || ""}
           readOnly
           onChange={(e) => setTitle(e.target.value)}
           className="w-full h-12 pl-4 pr-10 py-2 border rounded-lg bg-[#f9f9f9] cursor-default"
@@ -103,7 +134,7 @@ export default function RecordForm({
         <label className="block font-semibold mb-1 text-xs">개봉일</label>
         <input
           type="text"
-          value={releaseDate}
+          value={releaseDate || ""}
           readOnly
           placeholder="YYYY.MM.DD"
           onChange={(e) => setReleaseDate(e.target.value)}
@@ -126,7 +157,7 @@ export default function RecordForm({
           }}
           dateFormat="yyyy.MM.dd"
           locale={ko}
-          placeholderText="yyyy.MM.dd"
+          placeholderText="YYYY.MM.DD"
           maxDate={new Date()} // 오늘 이전만 선택 가능
           className="w-full h-12 pl-4 pr-10 py-2 border rounded-lg bg-white text-center"
           showPopperArrow={false}
@@ -137,7 +168,7 @@ export default function RecordForm({
       <div>
         <label className="block font-semibold mb-1 text-xs">한줄평</label>
         <textarea
-          value={comment}
+          value={comment || ""}
           onChange={(e) => setComment(e.target.value)}
           rows="2"
           className="w-full h-12 pl-4 pr-10 py-2 border rounded-lg bg-white resize-none"
@@ -148,7 +179,7 @@ export default function RecordForm({
         type="submit"
         className="bg-[#ff6b6b] w-full h-12 text-white rounded-md"
       >
-        등록하기
+        {isEdit ? "수정하기" : "등록하기"}
       </button>
     </form>
   );

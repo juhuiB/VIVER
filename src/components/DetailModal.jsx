@@ -53,8 +53,8 @@ export default function DetailModal({ item, onClose }) {
   const cast = credits?.cast?.slice(0, 5) || [];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-      <div className="flex flex-col bg-white max-w-3xl w-full h-[85vh] rounded-lg relative p-6 pt-12">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="flex flex-col bg-white w-full h-full relative p-6 pt-12">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-black"
@@ -63,7 +63,7 @@ export default function DetailModal({ item, onClose }) {
           <FiX className="w-6 h-6" />
         </button>
 
-        <div className="flex flex-col sm:flex-row gap-4 overflow-y-auto h-full">
+        <div className="flex flex-col gap-4 overflow-y-auto ">
           <img
             src={
               details.poster_path
@@ -71,7 +71,7 @@ export default function DetailModal({ item, onClose }) {
                 : "https://via.placeholder.com/300x450?text=No+Image"
             }
             alt={details.title || details.name}
-            className="w-auto h-[450px] sm:w-52 rounded object-contain"
+            className="w-auto h-[450px]  rounded object-contain"
           />
 
           <div className="flex-1 text-sm text-black">
@@ -158,14 +158,13 @@ export default function DetailModal({ item, onClose }) {
             )}
           </div>
         </div>
-        
+
         <button
           onClick={() => navigate("/record", { state: item })}
-          className="bg-[#ff6b6b] w-full h-12 text-white rounded-md mt-4 sticky bottom-0 left-0 right-0 z-10"
+          className="bg-[#ff6b6b] w-full h-12 text-white rounded-md mt-4 sticky bottom-0 left-0 right-0 z-10 flex-shrink-0"
         >
           기록하기
         </button>
-
       </div>
     </div>
   );

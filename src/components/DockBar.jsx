@@ -3,7 +3,7 @@ import { FiHome, FiEdit, FiBook } from "react-icons/fi";
 
 export default function DockBar() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow z-30">
       <div className="max-w-md mx-auto flex justify-around py-2">
         
         <NavLink
